@@ -1,0 +1,7 @@
+{
+  "configKey": "CONFIG",
+  "merchantId": 1,
+  "status": "ACTIVE",
+  "type": "CONFIG",
+  "value": "{\"protocol\":\"smtp\",\"password\":\"\",\"smtpAuth\":true}"
+}

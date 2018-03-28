@@ -1,0 +1,11 @@
+{
+	"name": "New User",
+	"description": "20 % off",
+	"message": "New User offer",
+	"startDate": "2018-03-1T01:59:25.380Z",
+	"endDate": "2018-03-204T01:59:25.380Z",
+	"status": "ACTIVE",
+	"active": "true",
+	"created_by": "2",
+	"priority": "1"
+}

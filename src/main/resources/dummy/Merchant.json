@@ -1,0 +1,28 @@
+{
+	"addressId": 1,
+	"businessSince": "2018-02-24T07:59:25.380Z",
+	"countryId": 91,
+	"currencyId": 2,
+	"deleted": false,
+	"deletedAt": "2018-02-24T07:59:25.380Z",
+	"domainName": "fairanb.com",
+	"email": "merchant02@fairanb.com",
+	"logo": "image/logo.jpg",
+	"languages": [
+		{
+			"id": "1"
+		},
+		{
+			"id": "2"
+		},
+		{
+			"id": "3"
+
+		}
+	],
+	"name":"merchant01",
+	"phone": "+1444-333-3334",
+	"sizeUnit": "KB",
+	"status": 	"ACTIVE",
+	"weightUnit": "LB"
+}

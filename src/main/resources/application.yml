@@ -1,0 +1,12 @@
+api.name: merchant
+server:
+  port: 8802
+spring:
+  application:
+    name: merchant-service
+  profiles:
+    active:
+      default
+  cloud:
+    config:
+      enabled: true

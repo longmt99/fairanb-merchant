@@ -1,0 +1,101 @@
+package com.fairanb.Controller;
+
+import com.fairanb.MerchantRestAPI;
+import com.fairanb.common.JConstants;
+import com.fairanb.common.JConstants.Status;
+import com.fairanb.common.Rest;
+import com.fairanb.common.TestBase;
+import com.fairanb.controller.MerchantConfigController;
+import com.fairanb.model.Paging;
+import com.fairanb.model.request.MerchantConfigRequest;
+import com.fairanb.model.response.MerchantConfigResponse;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes=MerchantRestAPI.class)
+public class MerchantConfigControllerTest extends TestBase {
+    private static final Logger log = LoggerFactory.getLogger(MerchantConfigControllerTest.class);
+    @Autowired
+    private MerchantConfigController controller;
+    @Before
+    public void setUp() throws Exception {
+       // dummyAccessToken(USER_ID, MERCHANT_ID);
+        super.setUp();
+    }
+    ModelMapper modelMapper=new ModelMapper() ;
+    @Test
+    public void testMerchantConfigController() throws Exception {
+
+        MerchantConfigRequest request = new MerchantConfigRequest();
+        //BeanUtils.copyProperties(merchantConfig, request);
+
+        request=modelMapper.map(merchantConfig, MerchantConfigRequest.class);
+        Long id = 0L;
+        ResponseEntity<Rest> rest = null;
+        MerchantConfigResponse response= null;
+        try {
+            log.info("*****Create MerchantConfig******** ");
+
+            rest = controller.createMerchantConfig(request, accessToken);
+            //Merchant merchant = request.copyBean(request);
+            response =  modelMapper.map(rest.getBody().getData(), MerchantConfigResponse.class);
+            id = response.getId();
+            Assert.assertEquals(HttpStatus.CREATED.value(), rest.getBody().getStatus());
+            Assert.assertNotNull(response);
+            log.debug(rest.getBody().getData().toString());
+
+            log.info("*****Update entire object with PUT method******** ");
+            String updateStatus = Status.INACTIVE.name();
+            request.setId(id);
+            request.setStatus(updateStatus);
+            rest = controller.updateMerchantConfig(request, accessToken);
+            Assert.assertEquals(HttpStatus.OK.value(), rest.getBody().getStatus());
+            log.debug(rest.getBody().getData().toString());
+
+            log.info("*****Get method By Id******** ");
+            // Get Merchant
+            rest = controller.getMerchantConfig(id);
+            Assert.assertEquals(HttpStatus.OK.value(), rest.getBody().getStatus());
+            response =  modelMapper.map(rest.getBody().getData(), MerchantConfigResponse.class);
+            Assert.assertEquals(updateStatus, response.getStatus());
+            log.debug(rest.getBody().getData().toString());
+
+
+            log.info("*****Get method  Search List******** ");
+            // Search List
+            rest = controller.listMerchantConfig( null, Paging.PAGE, Paging.SIZE, Paging.DESC, Paging.SORT);
+            Assert.assertEquals(HttpStatus.OK.value(), rest.getBody().getStatus());
+            Map<String, Object> map = (HashMap<String, Object>) rest.getBody().getData();
+            Paging paging = (Paging) map.get(Paging.class.getSimpleName().toLowerCase());
+            Assert.assertNotNull(paging);
+            Assert.assertTrue(paging.getTotalRows() >= 1);
+            List<MerchantConfigResponse> list = (List<MerchantConfigResponse>) map.get(JConstants.DATA_LIST);
+            MerchantConfigResponse merchant = list.get(0);
+
+        }catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail(e.getMessage());
+        } finally {
+            // Clean if existed
+            if(id>0){
+                log.info("*****Delete method delete By Id ******** ");
+                controller.deleteMerchantConfig(id, accessToken);
+            }
+        }
+    }
+}
